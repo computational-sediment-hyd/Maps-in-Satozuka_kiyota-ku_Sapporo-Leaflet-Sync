@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Leaflet Sync Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet-src.js" crossorigin=""></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <style type="text/css">
+        html, body { width: 100%; height: 100%; margin: 0; }
+        #map{ width: 34%; height: 100%; float: left;}
+        #container { width: 66%; height: 100%; float: right; }
+        /* #map { float: left; }
+        #container  { float: left; } */
+        /* #container2 { float: right; } */
+        #container .map { width: 50%; height: 50%; float: left; }
+        #map .mapp { width: 100%; height: 100%; }
+    </style>
+</head>
+
+<body>
+    <!-- <div id="map"></div> -->
+    <div id="container">
+        <div id="mapC" class="map"></div>
+        <div id="mapA" class="map"></div>
+        <div id="map2" class="map"></div>
+        <div id="mapB" class="map"></div>
+    </div>
+    <div id="map">
+        <div id="map1" class="mapp"></div>
+        <!-- <div id="map2" class="mapp"></div> -->
+    </div>
+
+<!-- using hatena blog -->
+    <!-- <div id="container" style="height: 600px; width: 300px; float:right"> -->
+        <!-- <div id="mapA" class="map" style="height: 50%; width: 100%"></div> -->
+        <!-- <div id="mapB" class="map" style="height: 50%; width: 100%"></div> -->
+    <!-- </div> -->
+    <!-- <div id="map" style="height: 600px; width: 300px; float:left"> -->
+        <!-- <div id="map1" class="mapp" style="height: 50%; width: 100%"></div> -->
+        <!-- <div id="map2" class="mapp" style="height: 50%; width: 100%"></div> -->
+    <!-- </div> -->
+
+    <!-- <script src="../L.Map.Sync.js"></script> -->
+    <script src="https://unpkg.com/leaflet.sync/L.Map.Sync.js"></script>
+
+    <script type="text/javascript">
+        var center = [42.989825, 141.459084];
+
+        var stamenOptions = {
+            attribution:
+                'Map tiles by <a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>',
+            subdomains: 'abcd',
+            minZoom: 0,
+            maxZoom: 20
+        };
+
+        var stamenOptions2 = {
+            attribution:
+                'Map tiles by <a href="http://ktgis.net/kjmapw/data.html">今昔マップ </a>',
+            subdomains: 'abcd',
+            minZoom: 0,
+            maxZoom: 20,
+            tms:true
+        };
+        var toner = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', stamenOptions);
+        var toner2 = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', stamenOptions);
+
+// <!-- 産総研 -->
+        var stamenOptions4 = {
+            subdomains: 'abcd',
+            minZoom: 3,
+            maxZoom: 18,
+            tms:true,
+            attribution: '<a href = "https://www.gsj.jp/license/index.html" target = "_blank">Geological Survey of Japan, AIST</a>'
+        };
+
+        var tonerLite = L.tileLayer('https://gbank.gsj.jp/geonavi/maptile/tms/1.0.0/G50_04_030ishiyama/{z}/{x}/{y}.png', stamenOptions4);
+        var tonerLite2 = L.tileLayer('https://gbank.gsj.jp/geonavi/maptile/tms/1.0.0/G50_04_021sapporo/{z}/{x}/{y}.png', stamenOptions4);
+
+        var toner1960= L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/ort_old10/{z}/{x}/{y}.png', stamenOptions);
+        var toner1970= L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/gazo1/{z}/{x}/{y}.jpg', stamenOptions);
+        var toner1980= L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/gazo3/{z}/{x}/{y}.jpg', stamenOptions);
+
+        var watercolor= L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/hillshademap/{z}/{x}/{y}.png', stamenOptions);
+        var konjyaku1916 = L.tileLayer('https://sv53.wadax.ne.jp/~ktgis-net/kjmapw/kjtilemap/sapporo/00/{z}/{x}/{y}.png',stamenOptions2 );
+        var konjyaku1935 = L.tileLayer('https://sv53.wadax.ne.jp/~ktgis-net/kjmapw/kjtilemap/sapporo/01/{z}/{x}/{y}.png',stamenOptions2 );
+        var konjyaku1950 = L.tileLayer('https://sv53.wadax.ne.jp/~ktgis-net/kjmapw/kjtilemap/sapporo/02/{z}/{x}/{y}.png',stamenOptions2 );
+        var konjyaku1975 = L.tileLayer('https://sv53.wadax.ne.jp/~ktgis-net/kjmapw/kjtilemap/sapporo/03/{z}/{x}/{y}.png',stamenOptions2 );
+        var konjyaku1995 = L.tileLayer('https://sv53.wadax.ne.jp/~ktgis-net/kjmapw/kjtilemap/sapporo/04/{z}/{x}/{y}.png',stamenOptions2 );
+
+        var map = L.map('map1', {
+            layers: [toner],
+            center: center,
+            zoom: 16
+        });
+        var mapC = L.map('mapC', {
+            layers: [toner2],
+            center: center,
+            zoom: 16
+        });
+        var map2 = L.map('map2', {
+            layers: [konjyaku1916],
+            center: center,
+            zoom: 16
+        });
+        var mapA = L.map('mapA', {
+            layers: [watercolor],
+            center: center,
+            zoom: 16,
+            zoomControl: false
+        });
+        var mapB = L.map('mapB', {
+            layers: [tonerLite],
+            center: center,
+            zoom: 16,
+            zoomControl: false
+        });
+
+        var baseMaps = {
+            "最新": toner,
+            "1961-1969年": toner1960,
+            "1974-1978年": toner1970,
+            "1984-1986年": toner1980,
+        };
+        L.control.layers(baseMaps, null, {collapsed:false}).addTo(map);
+
+        var baseMaps2 = {
+            "1916年": konjyaku1916,
+            "1935年": konjyaku1935,
+            "1950-1952年": konjyaku1950,
+            "1975-1976年": konjyaku1975,
+            "1995-1998年": konjyaku1995,
+        };
+        L.control.layers(baseMaps2, null, {collapsed:false}).addTo(map2);
+
+        var baseMaps3 = {
+            "石山": tonerLite,
+            "札幌": tonerLite2,
+        };
+        L.control.layers(baseMaps3, null, {collapsed:false}).addTo(mapB);
+	// var point =
+	// {
+	// "type": "FeatureCollection",
+	// "name": "tmp",
+	// "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::6668" } },
+	// "features": [
+	// { "type": "Feature", "properties": { "Name": "tmp" }, "geometry": { "type": "Point", "coordinates": [ 141.459084, 42.989825 ] } }
+	// ]
+	// };
+
+	// 	L.svg().addTo(map); // append svg element and g element
+	// 	var svg = d3.select("svg")
+
+	// 	//元データにLeafletのLatLngを追加
+	// 	point.features.forEach(function(d){
+	// 		d.LatLng = new L.LatLng(d.geometry.coordinates[1], d.geometry.coordinates[0]);
+	// 	});
+
+	// 	var layer = svg.selectAll(".layer1")
+	// 		.data(point.features)
+	// 		.enter()
+	// 		.append('g')
+	// 		.attr('class', 'layer1');
+
+	// 	var circles =layer.append("circle")
+	// 		.style("stroke", "white")
+	// 		.style("opacity", 0.5) 
+	// 		.style("fill", "white")
+	// 		.attr( "r", 20);
+
+
+        map.sync(mapA, {syncCursor: true});
+        map.sync(mapB, {syncCursor: true});
+        map.sync(map2, {syncCursor: true});
+        map.sync(mapC, {syncCursor: true});
+
+        // If you want interaction with mapA|B to be synchronized on map,
+        // add other links as well.
+        mapA.sync(map, {syncCursor: true});
+        mapA.sync(mapB, {syncCursor: true});
+        mapA.sync(map2, {syncCursor: true});
+        mapA.sync(mapC, {syncCursor: true});
+
+        mapB.sync(map, {syncCursor: true});
+        mapB.sync(mapA, {syncCursor: true});
+        mapB.sync(map2, {syncCursor: true});
+        mapB.sync(mapC, {syncCursor: true});
+
+        map2.sync(map, {syncCursor: true});
+        map2.sync(mapA, {syncCursor: true});
+        map2.sync(mapB, {syncCursor: true});
+        map2.sync(mapC, {syncCursor: true});
+
+        mapC.sync(mapA, {syncCursor: true});
+        mapC.sync(mapB, {syncCursor: true});
+        mapC.sync(map2, {syncCursor: true});
+        mapC.sync(map, {syncCursor: true});
+		// map.on("zoom", setTransform);
+		// setTransform(); // raise event at startup
+
+		// function transform(d) {
+		// 	return "translate("+ 
+		// 		map.latLngToLayerPoint(d.LatLng).x + ","+ 
+		// 		map.latLngToLayerPoint(d.LatLng).y + ")";
+		// };
+		// function setTransform() {
+		// 	circles.attr("transform", function(d) {return transform(d);});
+		// };
+
+
+        L.marker([42.988996,141.457347]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmW__2xVAAEJOYQ.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+        L.marker([42.98976,141.4591188]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmW__2yU8AAIrAc.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+        L.marker([42.989004, 141.460535]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmW__2yV4AAcTTn.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+        L.marker([42.989062, 141.456724]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmYH3g4U8AEJOK5.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+        L.marker([42.989251,141.458988]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmfbFWQVAAEZgMm.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+        L.marker([42.9889764,141.4569411]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmaBsiGU8AAtpUd.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+        L.marker([42.9891621,141.4559025 ]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmaHcX1U0AE8m5M.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+        L.marker([42.988217, 141.455667 ]).addTo(map)
+      .bindPopup( "<img src= 'https://pbs.twimg.com/media/DmaHcX0U4AAlnrk.jpg' width='500px' />",{maxWidth:"500px",closeOnClick: true} );
+    //   .openPopup();
+    </script>
+        <!-- //   'A pretty CSS3 popup.<br/> Easily customizable.') -->
+</body>
+</html>
